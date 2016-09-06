@@ -26,31 +26,47 @@ function initMap() {
       title: 'Winter Park Village'
     });
 
-    // Set up markers and infowindows
-    var infowindow = new google.maps.InfoWindow();
-    var m, i, content;
-
-    for (i = 0; i < markers.length; i++) {
-      m = new google.maps.Marker({
-        position: new google.maps.LatLng(markers[i].lat, markers[i].lng),
-        map: map,
-        title: markers[i].title
-      });
-
-      content = markers[i].title + "<hr>" + markers[i].category;
-
-      google.maps.event.addListener(m, 'click', (function(m, i) {
-        return function() {
-          infowindow.setContent(content);
-          infowindow.open(map, m);
-        }
-      })(m, i));
-    }
+    // Set up markers
+    setMarkers(markers);
 
 
 }
 
+// Set markers function that will be used to initiatte the map
+function setMarkers(location) {
+    for (i = 0; i < location.length; i++) {
+        location[i].marker = new google.maps.Marker({
+            position: new google.maps.LatLng(location[i].lat, location[i].lng),
+            map: map,
+            title: location[i].title
+        });
 
+        location[i].content = location[i].title + "<hr>" + location[i].category;
+        var infowindow = new google.maps.InfoWindow({
+            content: location[i].content
+        });
+
+        google.maps.event.addListener(location[i].marker, 'click', (function(marker, i) {
+            return function() {
+              infowindow.setContent(location[i].content);
+              infowindow.open(map, this);
+            }
+        })(location[i].marker, i));
+    }
+}
+
+function foursquareSearch(lat, lng, name){
+    var client_id = 2IUNCOTIR2UY5IBWIVK3YK3KX52LLTMUQO4UZF5SKQI0OV2I;
+    var client_secret = IJQHBFGENYEJ3C2BZXXRDYDJZGCPEGSFFGAAJRABKOSEISSY;
+    var query = "https://api.foursquare.com/v2/venues/search?client_id="
+                + client_id + "&client_secret="
+                + client_secret
+                + "&ll=" + lat + "," + lng
+                + "&query=" + encodeURIComponent(name);
+    return query;
+}
+
+// Markers array
 var markers = [
     {
         title: "Regal Winter Park Village Stadium 20 & RPX",
