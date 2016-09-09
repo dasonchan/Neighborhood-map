@@ -78,13 +78,13 @@ var viewModel = function() {
         Download Foursqaure data asynchronously using ajax
     */
     self.getFoursquareData = function(venue) {
-            var url = foursquareQuery(venue.lat, venue.lng, venue.title);
+            var url = foursquareQuery(venue.lat, venue.lng, venue.title());
 
             $.getJSON(url)
                 .done(function(data) {
                     console.log("successfully downloaded foursquare data");
-                    var result = data.response.venues["0"];
-                    var output = result.name + "<hr>" + result.id;
+                    var result = data.response.venues[0];
+                    var output = result.name + "<hr>" + "<strong>Address: </strong>" + result.location.formattedAddress;
                     self.infowindow.setContent(output);
             })
             .fail(function(){
@@ -98,18 +98,9 @@ var viewModel = function() {
         location.marker.addListener('click', (function(){
             return function(){
                 self.infowindowOutput(location);
-                self.infowindow.open(map,location.marker);
+                self.infowindow.open(map, location.marker);
             }
         })(location));
-        // add event listener for 'closeclick' to each infowindow then we pass location to the return function, then run it right after with location as parameter
-        google.maps.event.addListener(self.infowindow, 'closeclick', (function(){
-            return function(){
-                // reset all other markers to default red
-                for (var j = 0; j < locations.length; j++) {
-                    self.locationList()[j].marker.setIcon("https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png");
-                }
-            }
-        })(location))
     });
 };
 
