@@ -70,7 +70,6 @@ function initMap() {
         url: 'images/peacock.png',
         scaledSize: new google.maps.Size(100, 100),
         origin: new google.maps.Point(0, 0),
-        // The anchor for this image is the base of the flagpole at (0, 32).
         anchor: new google.maps.Point(0, 30)
     };
     var center = new google.maps.Marker({
@@ -80,8 +79,18 @@ function initMap() {
       icon: image
     });
 
+
+    // Add responsiveness to the map
+    google.maps.event.addDomListener(window, "resize", function() {
+    var center = map.getCenter();
+    google.maps.event.trigger(map, "resize");
+    map.setCenter(center);
+    });
+
     ko.applyBindings(new viewModel());
 }
+
+
 
 /*
     Return an URL to a Foursqaure query that returns the venue ID
@@ -121,6 +130,10 @@ var viewModel = function() {
     });
 
     self.infowindowOutput = function(location) {
+        for(var i = 0; i < markers.length; i++){
+            self.locationList()[i].marker.setAnimation(null);
+        }
+        location.marker.setAnimation(google.maps.Animation.BOUNCE);
         self.infowindow.setContent(infowindowDefault);
         self.getFoursquareData(location);
     }
@@ -183,7 +196,7 @@ var loc = function(marker){
     self.marker = new google.maps.Marker({
         position: {lat: self.lat, lng: self.lng},
         map: null
-    })
+    });
 
     self.showMarker = function(map) {
         if (map !== null ){
