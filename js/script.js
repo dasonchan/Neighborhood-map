@@ -176,9 +176,11 @@ var viewModel = function() {
                     var address = result.location.formattedAddress;
                     var id = result.id;
                     var url = result.url;
+                    var phone = result.contact.formattedPhone;
                     var foursquareUrl = "https://foursquare.com/v/" + id;
                     var output = name + " - " + category + "<hr>"
-                                + "<strong>Address: </strong>" + address + "<br>";
+                                + "<strong>Address: </strong>" + address + "<br>"
+                                + "<strong>Phone number: </strong>" + phone + "<br>";
                     if(url !== undefined){
                         output += "<strong><a href='" + url + "'>For more info please visit venue website</a></strong>"
                             +"<strong> or <a href='" + foursquareUrl + "'>Foursquare</a></strong>";
