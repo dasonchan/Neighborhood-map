@@ -174,11 +174,18 @@ var viewModel = function() {
                     var category = result.categories[0].name;
                     var name = result.name;
                     var address = result.location.formattedAddress;
+                    var id = result.id;
                     var url = result.url;
+                    var foursquareUrl = "https://foursquare.com/v/" + id;
                     var output = name + " - " + category + "<hr>"
                                 + "<strong>Address: </strong>" + address + "<br>";
                     if(url !== undefined){
-                        output += "<strong><a href='" + url + "'>For more info please visit website</a></strong>"
+                        output += "<strong><a href='" + url + "'>For more info please visit venue website</a></strong>"
+                            +"<strong> or <a href='" + foursquareUrl + "'>Foursquare</a></strong>";
+
+                    }
+                    else{
+                        output += "<strong><a href='" + foursquareUrl + "'>For more info please visit Foursquare</a></strong>"
                     }
                     self.infowindow.setContent(output);
             })
