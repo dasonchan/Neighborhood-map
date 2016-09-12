@@ -79,7 +79,6 @@ function initMap() {
       icon: image
     });
 
-
     // Add responsiveness to the map
     google.maps.event.addDomListener(window, "resize", function() {
     var center = map.getCenter();
@@ -134,6 +133,10 @@ var viewModel = function() {
             self.locationList()[i].marker.setAnimation(null);
         }
         location.marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() {
+            location.marker.setAnimation(null)
+        }, 3000);
+        self.infowindow.open(map, location.marker);
         self.infowindow.setContent(infowindowDefault);
         self.getFoursquareData(location);
     }
@@ -141,16 +144,22 @@ var viewModel = function() {
     self.markersList = ko.computed(function(){
         var list = [];
         var length = self.locationList().length;
+        var bounds = new google.maps.LatLngBounds();
 
         for(var i = 0; i < length; i++ ){
             if (self.locationList()[i].title().toLowerCase().indexOf(self.userInput().toLowerCase()) != -1) {
+                list.push(self.locationList()[i]);
                 self.locationList()[i].showMarker(map);
+                var myLatLng = new google.maps.LatLng(self.locationList()[i].lat, self.locationList()[i].lng);
+                bounds.extend(myLatLng)
             }
             else {
                 // for the items that are not a match, we turn off the markers
                 self.locationList()[i].showMarker(null);
             }
         }
+        map.fitBounds(bounds);
+        return list.sort(function(l, r){ return l.title() > r.title() ? 1 : -1;});
     });
 
     // Download Foursqaure data asynchronously using ajax
@@ -164,11 +173,18 @@ var viewModel = function() {
                     var category = result.categories[0].name;
                     var name = result.name;
                     var address = result.location.formattedAddress;
-                    var output = name + " - " + category + "<hr>" + "<strong>Address: </strong>" + address;
+                    var url = result.url;
+                    var output = name + " - " + category + "<hr>"
+                                + "<strong>Address: </strong>" + address + "<br>";
+                    if(url !== undefined){
+                        output += "<strong><a href='" + url + "'>For more info please visit website</a></strong>"
+                    }
                     self.infowindow.setContent(output);
             })
             .fail(function(){
-                console.log("Error occurs while getting foursquare data");
+                var output = "Error occurs while getting foursquare data"
+                console.log(output);
+                self.infowindow.setContent(output);
             })
     };
 
@@ -195,15 +211,15 @@ var loc = function(marker){
 
     self.marker = new google.maps.Marker({
         position: {lat: self.lat, lng: self.lng},
-        map: null
+        map: map
     });
 
     self.showMarker = function(map) {
         if (map !== null ){
-            self.marker.setMap(map);
+            self.marker.setVisible(true);
         }
         else{
-            self.marker.setMap(null);
+            self.marker.setVisible(false);
         }
     };
 }
