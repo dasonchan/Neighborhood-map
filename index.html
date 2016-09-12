@@ -10,11 +10,11 @@
 <body>
     <div class="col-sm-3">
     <input type="text" data-bind="textInput: userInput" placeholder="Search">
-    <div id="scroller">
-    <ul id="list" data-bind="foreach: markersList">
-            <li id="listitem">
-            <span data-bind="text: title, click: $parent.infowindowOutput"><br></span>
-            </li>
+    <div id="list">
+    <ul data-bind="foreach: markersList">
+        <li id="listitem">
+        <span data-bind="text: title, click: $parent.infowindowOutput"><br></span>
+        </li>
     </ul>
     </div>
     </div>

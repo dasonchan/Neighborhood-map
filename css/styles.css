@@ -11,10 +11,10 @@ div.col-sm-3 {
     border-style: solid;
     background-color: rgba(256,256,256,0.85);
 }
-#list {
+ul {
     list-style-type: none;
 }
-#scroller {
+#list {
     max-height: 480px;
     overflow: scroll;
     margin: 0 5px;

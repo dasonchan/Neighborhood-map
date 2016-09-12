@@ -159,6 +159,7 @@ var viewModel = function() {
             }
         }
         map.fitBounds(bounds);
+        // return a filered list in alphabetical order
         return list.sort(function(l, r){ return l.title() > r.title() ? 1 : -1;});
     });
 
