@@ -178,7 +178,7 @@ var viewModel = function() {
                     var url = result.url;
                     var phone = result.contact.formattedPhone;
                     var foursquareUrl = "https://foursquare.com/v/" + id;
-                    var output = name + " - " + category + "<hr>"
+                    var output = "<h5>" + name + "</h5> - " + category + "<hr>"
                                 + "<strong>Address: </strong>" + address + "<br>"
                                 + "<strong>Phone number: </strong>" + phone + "<br>";
                     if(url !== undefined){
