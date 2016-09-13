@@ -1,5 +1,5 @@
 
-div.col-sm-12 {
+div.col-sm-7 {
     height: 100%;
     position: absolute;
     float: right;
@@ -20,8 +20,8 @@ ul {
     margin: 0 5px;
 }
 #map {
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     margin: 0;
 }
 li {

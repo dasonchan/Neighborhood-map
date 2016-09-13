@@ -1,6 +1,6 @@
 var map;
 
-// Markers array
+// markers array
 var markers = [
     {
         title: "Regal Winter Park Village Stadium 20 & RPX",
@@ -73,22 +73,25 @@ function initMap() {
         anchor: new google.maps.Point(0, 30)
     };
     var center = new google.maps.Marker({
-      map: map,
-      position: myLatLng,
-      title: 'Winter Park Village',
-      icon: image
+        map: map,
+        position: myLatLng,
+        title: 'Winter Park Village',
+        icon: image
     });
 
     // Add responsiveness to the map
     google.maps.event.addDomListener(window, "resize", function() {
-    var center = map.getCenter();
-    google.maps.event.trigger(map, "resize");
-    map.setCenter(center);
+        var center = map.getCenter();
+        google.maps.event.trigger(map, "resize");
+        map.setCenter(center);
     });
 
     ko.applyBindings(new viewModel());
 }
 
+function googleError(){
+    console.trace();
+}
 
 
 /*
@@ -111,7 +114,7 @@ function foursquareQuery(lat, lng, name){
 
 var infowindowDefault = '<div style="width: 100px; height: 30px;"><p style="text-align: center;">Loading</p></div>';
 
-// Define viewModel
+// define viewModel
 var viewModel = function() {
     var self = this;
     // initiate observable to store user input
@@ -128,10 +131,12 @@ var viewModel = function() {
         content: infowindowDefault
     });
 
+    // function that handles everything related to a infowindow
     self.infowindowOutput = function(location) {
         for(var i = 0; i < markers.length; i++){
             self.locationList()[i].marker.setAnimation(null);
         }
+        // add on click animation to marker
         location.marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function() {
             location.marker.setAnimation(null)
@@ -145,8 +150,10 @@ var viewModel = function() {
         var list = [];
         var length = self.locationList().length;
         var bounds = new google.maps.LatLngBounds();
+        // close infowindow every time we update the data
+        self.infowindow.close();
 
-        for(var i = 0; i < length; i++ ){
+        for(var i = 0; i < length; i++){
             if (self.locationList()[i].title().toLowerCase().indexOf(self.userInput().toLowerCase()) != -1) {
                 list.push(self.locationList()[i]);
                 self.locationList()[i].showMarker(map);
@@ -163,7 +170,7 @@ var viewModel = function() {
         return list.sort(function(l, r){ return l.title() > r.title() ? 1 : -1;});
     });
 
-    // Download Foursqaure data asynchronously using ajax
+    // download Foursqaure data asynchronously using ajax
     self.getFoursquareData = function(venue) {
             var url = foursquareQuery(venue.lat, venue.lng, venue.title());
 
@@ -178,12 +185,12 @@ var viewModel = function() {
                     var url = result.url;
                     var phone = result.contact.formattedPhone;
                     var foursquareUrl = "https://foursquare.com/v/" + id;
-                    var output = "<h5>" + name + "</h5> - " + category + "<hr>"
+                    var output = "<h5>" + name + "</h5>" + category + "<hr>"
                                 + "<strong>Address: </strong>" + address + "<br>"
                                 + "<strong>Phone number: </strong>" + phone + "<br>";
                     if(url !== undefined){
-                        output += "<strong><a href='" + url + "'>For more info please visit venue website</a></strong>"
-                            +"<strong> or <a href='" + foursquareUrl + "'>Foursquare</a></strong>";
+                        output += "For more info please visit <strong><a href='" + url + "'>venue website</a></strong>"
+                            +" or <strong><a href='" + foursquareUrl + "'>Foursquare</a></strong>";
 
                     }
                     else{
@@ -225,7 +232,7 @@ var loc = function(marker){
     });
 
     self.showMarker = function(map) {
-        if (map !== null ){
+        if (map !== null){
             self.marker.setVisible(true);
         }
         else{
@@ -233,6 +240,7 @@ var loc = function(marker){
         }
     };
 }
+
 
 
 
